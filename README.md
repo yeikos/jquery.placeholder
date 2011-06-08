@@ -5,32 +5,32 @@ How do you use?
 
 --------------------------------------
 
-`<p> <input type="text" placeholder="Email"> </p>
-<p> <input type="password" placeholder="Password"> </p>
+&lt;p&gt; &lt;input type=&quot;text&quot; placeholder=&quot;Email&quot;&gt; &lt;/p&gt;
+&lt;p&gt; &lt;input type=&quot;password&quot; placeholder=&quot;Password&quot;&gt; &lt;/p&gt;
 
-<script type="text/javascript">
+&lt;script type=&quot;text/javascript&quot;&gt;
 
 	$.placeholder();
 
-</script>`
+&lt;/script&gt;
 
 --------------------------------------
 
-`<p> <input type="text" id="search" placeholder="seach"> </p>
+&lt;p&gt; &lt;input type=&quot;text&quot; id=&quot;search&quot; placeholder=&quot;seach&quot;&gt; &lt;/p&gt;
 
 
-<script type="text/javascript">
+&lt;script type=&quot;text/javascript&quot;&gt;
 
 	$('#search').placeholder();
 
-</script>`
+&lt;/script&gt;
 
 --------------------------------------
 
-`<p> <textarea type="text" id="description"> </p>
+&lt;p&gt; &lt;textarea type=&quot;text&quot; id=&quot;description&quot;&gt; &lt;/p&gt;
 
-<script type="text/javascript">
+&lt;script type=&quot;text/javascript&quot;&gt;
 
 	$('#description').placeholder('Description');
 
-</script>`
+&lt;/script&gt;
