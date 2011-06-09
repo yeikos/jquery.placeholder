@@ -1,61 +1,117 @@
-(function($) {
+/*!
+ * jQuery.placeholder v1.0
 
-	var support = document.createElement('input').placeholder ? true : false;
+ * Copyright 2011 - yeikos
+ * GNU General Public License
+ * http://www.gnu.org/licenses/gpl-3.0.txt
+ */
+ 
+(function($, undefined) {
+
+	// check if the browser supports use placeholder native 
 	
-	function prepareStyle(element) {
+	var supportHTML5 = (document.createElement('input').placeholder == undefined) ? false : true, 
 	
-		var newCss = {
-			color: '#A9A9A9'
-		}, oldCss = {};
+	// this function will do a backup css
+	
+		makeCSS = function(type, element) {
+	
+		var defined = $.placeholder.config.css[type], 
+			backup = {};
 		
-		// css backup
+		if (typeof defined == 'object') {
 		
-		$.each(newCss, function(key) { 
-		
-			oldCss[key] = $(element).css(key);
+			$.each(defined, function(key) { 
 			
-		});
+				backup[key] = $(element).css(key);
+				
+			});
+			
+		}
 		
 		// return new css and backup
 		
 		return {
-			newCss: newCss,
-			oldCss: oldCss
+			defined: defined,
+			backup: backup
 		};
 		
-	}
+	};
+	
+	// call with selector predefined
 	
 	$.placeholder = function() {
 	
-		$('input[type=text],input[type=password],textarea').placeholder(arguments[0]);
+		$($.placeholder.config.selectorDefault).placeholder(arguments[0]);
 
 	};
+
+	// script config
 	
 	$.placeholder.config = {
 	
-		force: true
+		// force to use this script and not native support
+		 
+		forced: true,
+		
+		// default selector used in $.placeholder();
+		
+		selectorDefault: 'input[type=text],input[type=password],textarea',
+		
+		// text by default if there is not defined a placeholder
+		
+		textDefault: 'default',
+		
+		// css used by the placeholders
+		
+		css: {
+		
+			inputText: {
+				color: '#A9A9A9'
+			},
+			
+			inputPassword: {
+				color: '#A9A9A9'
+			},
+			
+			textarea: {
+				color: '#A9A9A9'
+			}
+		}
 		
 	};
 	
 	$.fn.placeholder = function() {
 	
-		if (support || !$.placeholder.force) {
+		// native support && no forced to use this script
+
+		if (supportHTML5 && !$.placeholder.config.forced) {
 		
-			return true;
+			return true; // return and use native support
 			
 		}
+	
+		var	argv = arguments[0], 
 		
-		var	 argv = arguments[0], tag = argv ? false : true;
+		// check if there is placeholder like argument
+		
+			tag = argv ? false : true;
 		
 		$.each(this, function(index, element) {
 	
-			var node = element.nodeName,
-				type = $(element).attr('type'),
-				text = tag ? $(element).attr('placeholder') : text ? argv : 'default',
-				style = prepareStyle(element);
+			var node = element.nodeName.toLowerCase(),
+			
+				type = $(element).attr('type').toLowerCase(),
+				
+				// argument || placeholder attribute || text default
+				
+				text = tag ? $(element).attr('placeholder') : argv ? argv : $.placeholder.config.textDefault,
+				style;
 	
-			if (node == 'INPUT' && type == 'password') { // <input type="password">
+			if (node == 'input' && type == 'password') { // <input type="password">
 
+				style = makeCSS('inputPassword', element);
+			
 				var newAttr = {};
 
 				// copy all attributes with values
@@ -69,58 +125,63 @@
 				});
 		
 				newAttr.value = text;
-
+				
+				// delete dangerous attributes 
+				
 				delete newAttr.id;
 				delete newAttr.type;
 				delete newAttr.name;
 				
-				// create a new element exactly equal but type text
+				// create a new element exactly equal but type text new style
 
-				var newElement = $('<input type="text">').attr(newAttr).css(style.newCss).hide();
+				var newElement = $('<input type="text">').attr(newAttr).css(style.defined).hide();
 		
 				// element copy is added to continuing
 				
-				$(element).after(newElement).blur({newElement: newElement}, function(event) { 
+				$(element).after(newElement).blur(function(event) { 
 				
-					if($(this).val() == '') { // no password entered
+					if(!$(this).val().length) { // no password entered
 
-						$(event.data.newElement).show(); // show input text
+						$(newElement).show(); // show input text
 						$(this).hide(); // hidden input password
 						
 					}
 					
 				}).hide();
 				
-				$(newElement).focus({element: element}, function(event) { 
+				$(newElement).focus(function(event) {
 
-					$(this).hide();
-					$(event.data.element).show().focus();
+					$(this).hide(); // hidden input text
+					$(element).show().focus(); // show and focus input password
 					
 				}).show();
 
 				return true;
 				
-			} else if ((node == 'INPUT' && type == 'text') || node == 'TEXTAREA') { // <input type="text"> <textarea>
+			} else if ((node == 'input' && type == 'text') || node == 'textarea') { // <input type="text"> || <textarea>
 			
-				var mutex = true,
-					style = prepareStyle(this);
+				style = makeCSS((node == 'input') ? 'inputText' : 'textarea', element);
 				
-				$(element).focus({style: style}, function(event) {
+				// special variable
+				
+				var mutex = true;
+				
+				$(element).focus(function(event) {
 
 					if (mutex) {
-						$(this).css(event.data.style.oldCss).val('');
+						$(this).css(style.backup).val(''); // unset text
 					}
 
-				}).blur({style: style}, function(event) {
+				}).blur(function(event) {
 				
 					if (!$(this).val().length) {
 			
-						$(this).css(event.data.style.newCss).val(text);
+						$(this).css(style.defined).val(text); // set text
 					}
 				
 				}).change(function() {
 
-					mutex = $(this).val().length ? false: true;
+					mutex = $(this).val().length ? false: true; // check if there is value
 			
 				}).blur();
 				
@@ -128,7 +189,10 @@
 				
 			} else {
 			
-				throw 'jquery.placeholder -> Element is not input type text/password or textarea';
+				// input text/password or textarea is required
+			
+				throw 'jQuery.placeholder: Element is not input type text/password or textarea.';
+				
 				return false;
 				
 			}

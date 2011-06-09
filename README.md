@@ -1,36 +1,36 @@
-[jQuery.placeholder]
+jQuery.placeholder
 ==================================================
 
 How do you use?
 
 --------------------------------------
 
-&lt;p&gt; &lt;input type=&quot;text&quot; placeholder=&quot;Email&quot;&gt; &lt;/p&gt;
-&lt;p&gt; &lt;input type=&quot;password&quot; placeholder=&quot;Password&quot;&gt; &lt;/p&gt;
+<p> <input type="text" placeholder="Email"> </p>
+<p> <input type="password" placeholder="Password"> </p>
 
-&lt;script type=&quot;text/javascript&quot;&gt;
+<script type="text/javascript">
 
 	$.placeholder();
 
-&lt;/script&gt;
+</script>
 
 --------------------------------------
 
-&lt;p&gt; &lt;input type=&quot;text&quot; id=&quot;search&quot; placeholder=&quot;seach&quot;&gt; &lt;/p&gt;
+<p> <input type="text" id="search" placeholder="seach"> </p>
 
 
-&lt;script type=&quot;text/javascript&quot;&gt;
+<script type="text/javascript">
 
 	$('#search').placeholder();
 
-&lt;/script&gt;
+</script>
 
 --------------------------------------
 
-&lt;p&gt; &lt;textarea type=&quot;text&quot; id=&quot;description&quot;&gt; &lt;/p&gt;
+<p> <textarea type="text" id="description"> </p>
 
-&lt;script type=&quot;text/javascript&quot;&gt;
+<script type="text/javascript">
 
 	$('#description').placeholder('Description');
 
-&lt;/script&gt;
+</script>
