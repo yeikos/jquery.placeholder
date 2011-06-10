@@ -4,32 +4,36 @@ jQuery.placeholder
 How to use
 --------------------------------------
 
-#HTML
+JS sample:
 
-<p> <input type="text" placeholder="Email"> </p>
-<p> <input type="password" placeholder="Password"> </p>
-
-#JS
-
-$(function() {
-
-	$.placeholder();
+	#JS
 	
-});
+	$(function() {
+
+		$.placeholder();
+		
+	});
+
+HTML code:
+
+	#HTML
+	
+	<p> <input type="text" placeholder="Email"> </p>
+	<p> <input type="password" placeholder="Password"> </p>
 
 --------------------------------------
 
-#HTML
+	#HTML
 
-<p> <input type="text" id="search" placeholder="seach"> </p>
+	<p> <input type="text" id="search" placeholder="seach"> </p>
 
-#JS
+	#JS
 
-$(function() {
+	$(function() {
 
-	$('#search').placeholder();
+		$('#search').placeholder();
 
-});
+	});
 
 --------------------------------------
 
