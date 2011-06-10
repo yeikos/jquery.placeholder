@@ -4,9 +4,8 @@ jQuery.placeholder
 How to use
 --------------------------------------
 
-JS sample:
-
-	#JS
+	<p> <input type="text" placeholder="Email"> </p>
+	<p> <input type="password" placeholder="Password"> </p>
 	
 	$(function() {
 
@@ -14,20 +13,9 @@ JS sample:
 		
 	});
 
-HTML code:
-
-	#HTML
-	
-	<p> <input type="text" placeholder="Email"> </p>
-	<p> <input type="password" placeholder="Password"> </p>
-
 --------------------------------------
 
-	#HTML
-
 	<p> <input type="text" id="search" placeholder="seach"> </p>
-
-	#JS
 
 	$(function() {
 
@@ -37,14 +25,10 @@ HTML code:
 
 --------------------------------------
 
-#HTML
+	<p> <textarea type="text" id="description"> </p>
 
-<p> <textarea type="text" id="description"> </p>
+	$(function() {
 
-#JS
-
-$(function() {
-
-	$('#description').placeholder('Description');
-	
-});
+		$('#description').placeholder('Description');
+		
+	});
