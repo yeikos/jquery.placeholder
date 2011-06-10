@@ -3,12 +3,13 @@ jQuery.placeholder
 
 How to use
 --------------------------------------
+
 #HTML
 
 <p> <input type="text" placeholder="Email"> </p>
 <p> <input type="password" placeholder="Password"> </p>
 
-<script type="text/javascript">
+#JS
 
 $(function() {
 
@@ -16,16 +17,13 @@ $(function() {
 	
 });
 
-</script>
-
 --------------------------------------
 
 #HTML
 
 <p> <input type="text" id="search" placeholder="seach"> </p>
 
-
-<script type="text/javascript">
+#JS
 
 $(function() {
 
@@ -33,19 +31,16 @@ $(function() {
 
 });
 
-</script>
-
 --------------------------------------
+
 #HTML
 
 <p> <textarea type="text" id="description"> </p>
 
-<script type="text/javascript">
+#JS
 
 $(function() {
 
 	$('#description').placeholder('Description');
 	
 });
-
-</script>
