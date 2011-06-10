@@ -6,29 +6,42 @@ How to use
 
 	<p> <input type="text" placeholder="Email"> </p>
 	<p> <input type="password" placeholder="Password"> </p>
-	
-	$(function() {
 
-		$.placeholder();
+	<script type="text/javascript">
+
+		$(function() {
+
+			$.placeholder();
+			
+		});
 		
-	});
-
+	</script>
+	
 --------------------------------------
 
 	<p> <input type="text" id="search" placeholder="seach"> </p>
 
-	$(function() {
+	<script type="text/javascript">
 
-		$('#search').placeholder();
+		$(function() {
 
-	});
+			$('#search').placeholder();
 
+		});
+		
+	</script>
+	
 --------------------------------------
 
 	<p> <textarea type="text" id="description"> </p>
 
-	$(function() {
+	
+	<script type="text/javascript">
 
-		$('#description').placeholder('Description');
+		$(function() {
+
+			$('#description').placeholder('Description');
+			
+		});
 		
-	});
+	</script>
