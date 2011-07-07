@@ -1,0 +1,38 @@
+<html>
+
+	<head>
+
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
+		<script type="text/javascript" src="https://raw.github.com/yeikos/jquery.placeholder/master/jquery.placeholder.js"></script>
+
+		<script type="text/javascript">
+
+			$(function() {
+
+				$.placeholder();
+
+				$('#passwordConfirm').placeholder('Confirm password');
+
+			});
+
+		</script>
+
+	</head>
+
+	<body>
+
+		<form>
+		
+			<p><input type="text" name="username" placeholder="Username" value="guest"></p>
+			
+			<p><input type="password" name="password" placeholder="Password"></p>
+			
+			<p><input type="password" name="passwordConfirm" id="passwordConfirm" placeholder="replaced"></p>
+
+			<input type="submit" value="Send">
+			
+		</form>
+		
+	</body>
+
+</html>
