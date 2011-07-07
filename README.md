@@ -11,9 +11,9 @@ More info about placeholders: http://dev.w3.org/html5/spec/Overview.html#the-pla
 Features
 --------------------------------------
 
-Compatible with all browsers IE6+, Chrome, Firefox, Opera, Safari...
-Script no intrusive, it's clean and effective
-Input text/password and textarea are supported
+	Compatible with all browsers IE6+, Chrome, Firefox, Opera, Safari...
+	Script no intrusive, it's clean and effective
+	Input text/password and textarea are supported
 	
 How to use
 --------------------------------------
