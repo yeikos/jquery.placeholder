@@ -1,0 +1,50 @@
+<html>
+
+	<head>
+
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
+		<script type="text/javascript" src="https://raw.github.com/yeikos/jquery.placeholder/master/jquery.placeholder.js"></script>
+
+		<style type="text/css">
+
+			.placeholder {
+
+				color: blue !important;
+
+			}
+
+		</style>
+
+		<script type="text/javascript">
+
+			$(function() {
+
+				$('form').placeholder('input[type=text][name=username], input[type=password][name=passwordConfirm]', { 
+
+					forced: true 
+
+				});
+
+			});
+
+		</script>
+
+	</head>
+
+	<body>
+
+		<form>
+		
+			<p><input type="text" name="username" placeholder="Username" /></p>
+			
+			<p><input type="password" name="password" placeholder="Password" /></p>
+			
+			<p><input type="password" name="passwordConfirm" placeholder="Confirm password" /></p>
+
+			<p><textarea name="comment" placeholder="Comment"></textarea>
+
+		</form>
+		
+	</body>
+
+</html>

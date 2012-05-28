@@ -9,9 +9,9 @@
 
 			$(function() {
 
-				$.placeholder();
+				// $.placeholder() == $('body').placeholder();
 
-				$('#passwordConfirm').placeholder('Confirm password');
+				$.placeholder(); 
 
 			});
 
@@ -23,14 +23,14 @@
 
 		<form>
 		
-			<p><input type="text" name="username" placeholder="Username" value="guest"></p>
+			<p><input type="text" name="username" placeholder="Username" value="guest" /></p>
 			
-			<p><input type="password" name="password" placeholder="Password"></p>
+			<p><input type="password" name="password" placeholder="Password" /></p>
 			
-			<p><input type="password" name="passwordConfirm" id="passwordConfirm" placeholder="replaced"></p>
+			<p><input type="password" name="passwordConfirm" placeholder="Confirm password" /></p>
 
-			<input type="submit" value="Send">
-			
+			<p><textarea name="comment" placeholder="Comment"></textarea>
+
 		</form>
 		
 	</body>

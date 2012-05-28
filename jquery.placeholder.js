@@ -1,213 +1,194 @@
 /*!
- * @name jQuery.placeholder v1.1
+ * @name jQuery.placeholder v1.5.0
  * @autor yeikos
  
- * Copyright 2011 - https://github.com/yeikos/jquery.placeholder
+ * Copyright 2012 - https://github.com/yeikos/jquery.placeholder
  * GNU General Public License
  * http://www.gnu.org/licenses/gpl-3.0.txt
  */
  
-(function($, undefined) {
+;(function($, undefined) {
 
-	$('html > head').append('<style> .jqueryPlaceholder { color: #A9A9A9; } </style>');
+	// Acceso directo con contexto ya definido (body)
 
-	var supportHTML5 = function() {// check if the browser supports use placeholder native 
-	
-		var node = arguments[0], 
-			type = arguments[1],
-			element = document.createElement(node);
+	$.placeholder = function() {
+
+		var $context = $('body');
+
+		return $context.placeholder.apply($context, arguments);
+
+	};
+
+	// Opciones por defecto
+
+	$.placeholder.defaults = {
+
+		// Selector por defecto
+
+		selector: 'input[type=text],input[type=password],textarea',
+
+		// Marcador para forzar el uso de jQuery.placeholder aún habiendo soporte nativo
+
+		forced: false
+
+	};
+
+	// Función de ayuda para comprobar el soporte nativo de placeholder en diferentes elementos
+
+	$.placeholder.support = function(node, type) {
+
+		var element = document.createElement(node);
 		
-		if (type) { 
+		if (type)
 		
 			element.type = type;
 
-		}
-		
-		return (element.placeholder == undefined) ? false : true;
-		
-	};
-	
-	// call with selector predefined
-	
-	$.placeholder = function() {
-	
-		$($.placeholder.config.selector).placeholder(arguments[0]);
+		return (element.placeholder !== undefined);
 
 	};
 
-	// script config
-	
-	$.placeholder.config = {
-	
-		// force to use this script when there is native support (only if there is not a placeholder like argument when call to $.placeholder)
-		 
-		forced: true,
-		
-		support: {
-		
-			// check native placeholder
-			
-			inputText: supportHTML5('input', 'text'),
-			inputPassword: supportHTML5('input', 'password'),
-			textarea: supportHTML5('textarea')
-			
-		},
-
-		// default selector used in $.placeholder();
-		
-		selector: 'input[type=text],input[type=password],textarea',
-
-		// css class used by the placeholders
-		
-		classPlaceholder: 'jQueryPlaceholder'
-		
-	};
+	// Función principal encargada de dar soporte placeholder a los elementos
 
 	$.fn.placeholder = function() {
 
-		var option = arguments[0],
-			config = $.placeholder.config;
-		
-		$.each(this, function(index, element) {
+		// Los argumentos option y selector son opcionales y sin un orden de entrada
 
-			var node = element.nodeName.toLowerCase(),
-			
-				type = ($(element).attr('type') || '').toLowerCase(),
+		var temp = {},
+			argv = arguments;
 
-				text = (option != undefined) ? option : $(element).attr('placeholder'),
-				
-				style;
-				
-			if (typeof option != 'boolean') { // no action
-			
-				if (!text) { // no text placeholder
-	
-					return true;
-					
-				} else if ($(element).attr('placeholder') != text) { // differents placeholders (overlays with placeholder jquery & placeholder attribute html)
-		
-					$(element).attr('placeholder', text);
-					
-				}
-				
-			}
+		temp[typeof argv[0]] = argv[0];
+		temp[typeof argv[1]] = argv[1];
 
-			if ((node == 'input' && (type == 'text' || type == 'password')) || node == 'textarea') { // text, password, textarea
-			
-				// if previous call (remove element created)
-				
-				var newElement = $(element).data('placeholderElement');
-				
-				if (newElement) {
-			
-					newElement.remove();
-					
-				}
-				
-				if (option === false) { // disable placeholder
-				
-					$(element).
-					unbind('blur.placeholder'). // delete unbind
-					removeClass(config.classPlaceholder). // remove class
-					data('placeholderElement', ''). // delete link to element
-					data('placeholder', text). // save placeholder text
-					attr('placeholder', ''). // delete placeholder attribute
-					show();
-					
-					return true;
-					
-				} else if (option === true) { // enable placeholder
-		
-					text = $(element).data('placeholder');
-					
-					$(element).attr('placeholder', text);
-				
-				}
-				
-				// check if there is native support
-			
-				type = (node == 'textarea') ? 'textarea' : (type == 'text') ? 'inputText' : 'inputPassword';
-				
-				if (config.support[type] && !config.forced) {
-				
-					return true;
+		// Mezclamos los argumentos por defecto con los introducidos por el usuario
 
-				}
-			
-				// copy all attributes with values of element
-				
-				var newAttr = {};
+		var option = $.extend({}, $.placeholder.defaults, temp.object ? temp.object : {}, temp.string ? { selector: temp.string } : {});
 
-				$.each(element.attributes, function(subindex, subitem) {
-				
-					if (subitem.nodeValue && subitem.nodeValue.length) {
-					
-						newAttr[subitem.nodeName] = subitem.nodeValue;
-						
-					}
-		
-				});
-		
-				newAttr.value = text;
-		
-				// id is unique, if there are two elements with same id always get the first so it new element will go to next
-				
-				delete newAttr.placeholder; // placeholder is not need
-				delete newAttr.type; // if its password it will set to text
-				delete newAttr.name; // delete dangerous attributes 
-	
-				// create a new element exactly equal but type text new style
-			
-				newElement = $('<input type="text">').attr(newAttr).addClass(config.classPlaceholder).hide();
+		// Recorremos todos los contextos
 
-				// element copy is added to next
-			
-				$(element).data('placeholderElement', newElement).after(newElement).bind('blur.placeholder', function(event) { 
+		return $(this).each(function(x, context) {
+
+			// Utilizamos el selector para buscar dentro del contexto
+
+			$(option.selector, context).each(function(y, element) {
+
+				// Acceso directo al elemento actual
+
+				var $self = $(this),
+
+				// Obtenemos el atributo placeholder
+
+					placeholder = $self.attr('placeholder'),
+
+				// Definimos el tipo de elemento (textarea, inputText, inputPassword)
+
+					type = $self.is('textarea') ? 'textarea' : $self.is('input[type=text]') ? 'inputText' : $self.is('input[type=password]') ? 'inputPassword' : 0;
+
+				// Contenedor para almacenar los atributos
+
+					attr = {};
+
+				// Si el tipo no es correcto o
+				// Ya se actuó sobre el elemento o
+				// El elemento no tiene definido un placeholder o
+				// El elemento tiene soporte nativo y no está el marcador forced activado
+
+				if (!type || $self.data('placeholder') || placeholder === undefined || ($.placeholder.support[type] && !option.forced))
+
+					// Detenemos el código
+
+					return;
+
+				// Copiamos todos los atributos de elemento al contenedor attr
+
+				$.each(element.attributes, function(z, item) {
 				
-					if(!$(this).val().length) { // no input entered
+					if (item.nodeValue && item.nodeValue.length)
 
-						$(newElement).show(); // show input text
-						$(this).hide(); // hidden input password
-						
-					}
-					
-				});
-	
-				$(newElement).bind('focus.placeholder', function(event) {
-
-					$(this).hide(); // hidden input text
-					$(element).show().trigger('focus'); // show and focus input password
-					
+						attr[item.nodeName] = item.nodeValue;
+				
 				});
 
-				// if there is value, show original element, else, show new element with placeholder
-				
-				if ($(element).val().length) {
-				
-					$(newElement).hide();
-					$(element).show();
+				// Establecemos como valor el atributo placeholder y eliminamos los siguientes atributos
 
-				} else {
-				
-					$(element).hide();
-					$(newElement).show();
-					
-				}
+				attr.value = placeholder;
 
-			} else {
-			
-				// input text/password or textarea is required
-			
-				throw 'jQuery.placeholder: Element is not input type text/password or textarea.';
-				
-				return false;
-				
-			}
-						
+				// El placeholder para evitar conflictos con el soporte nativo
+
+				delete attr.placeholder;
+
+				// El tipo, si lo hubiera, pues éste será definido a continuación
+
+				delete attr.type;
+
+				// El nombre para evitar problemas en los formularios
+
+				delete attr.name;
+
+				// Creamos el elemento placeholder (input text o textarea)
+
+				var $placeholder = $((type == 'textarea') ? '<textarea></textarea>' : '<input type="text">');
+
+				// Establecemos los atributos anteriores y el color del texto
+				// Ocultamos el elemento y lo insertamos después del elemento original
+
+				$placeholder.attr(attr).css('color', '#A9A9A9').addClass('placeholder').hide().insertAfter(
+
+					// Eliminamos el atributo placeholder del elemento original para evitar problemas
+					// Añadimos un marcador para evitar repetir el proceso
+					// Guardamos el elemento placeholder en el elemento original (data)
+
+					// Cuando el elemento original pierda el enfoce
+
+					$self.on('blur.placeholder', function() {
+
+						// Si carece de valor
+
+						if (!$self.val().length) {
+
+							// Ocultamos el elemento original y mostramos el placeholder
+
+							$self.hide();
+							$placeholder.show();
+
+						}
+
+					}).trigger('blur.placeholder').attr('placeholder', null).data('placeholder', $placeholder)
+
+				// Guardamos el elemento original en el elemento placeholder (data)
+
+				// Cuando se enfoque el elemento placeholder
+
+				).on('focus.placeholder', function() {
+
+					// Ocultamos el elemento placeholder y mostramos el original
+
+					$placeholder.hide();
+					$self.show().trigger('focus');
+
+				}).data('placeholder', $self);
+
+			});
+
 		});
-		
-		return this;
 
 	};
-	
+
+	// Comprobamos el soporte nativo placeholder de los siguientes elementos
+
+	(function(support) {
+
+		// input[type=text]
+
+		support.inputText = support('input', 'text');
+
+		// input[type=password]
+
+		support.inputPassword = support('input', 'password');
+
+		// textarea
+
+		support.textarea = support('textarea');
+
+	})($.placeholder.support);
+
 })(jQuery);
